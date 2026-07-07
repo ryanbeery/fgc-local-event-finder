@@ -1,0 +1,43 @@
+name: fgc-local-event-finder
+
+services:
+  db:
+    # Pre-built image: Postgres 18 with the PostGIS extension already installed.
+    # PostGIS gives us first-class geospatial types/queries for "events near me".
+    image: postgis/postgis:18-3.6
+    container_name: fgc-db
+    # Restart the container automatically unless we stop it by hand (e.g. after
+    # a machine reboot or a crash), but don't fight a deliberate `compose down`.
+    restart: unless-stopped
+    environment:
+      # Values come from .env (git-ignored); .env.example is the committed template.
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      # HOST:CONTAINER port mapping. Bind to loopback (127.0.0.1) only so the DB
+      # is reachable from this machine but not from other devices on the LAN.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Named volume (declared at the bottom): Docker-managed storage for the
+      # database files. Persists across `compose down`; removed by `compose down -v`.
+      # Postgres 18+ images expect a single mount at /var/lib/postgresql (they
+      # store data in a version subdir); older images used .../data directly.
+      - db_data:/var/lib/postgresql
+      # Bind mount of a real repo folder, read-only. Scripts here run once, in
+      # alphabetical order, on first initialization (only when db_data is empty).
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # Lets Docker (and dependent services later) know when the DB is actually
+      # ready to accept connections, not just "started".
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+# Declares the named volume used above so Docker creates and manages it. The
+# empty value means "use the default local driver". Bind mounts (./db/init)
+# don't need declaring here — only Docker-managed named volumes do.
+volumes:
+  db_data:
