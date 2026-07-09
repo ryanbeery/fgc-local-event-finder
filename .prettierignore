@@ -1,0 +1,7 @@
+# Generated / tool-managed files — their format is not ours to control.
+pnpm-lock.yaml
+
+# Installed dependencies and build output (also git-ignored).
+node_modules
+dist
+dist-ssr

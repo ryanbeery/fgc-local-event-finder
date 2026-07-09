@@ -1,0 +1,12 @@
+# Declares which folders pnpm should treat as workspaces (individual projects
+# inside this monorepo). Each glob matches immediate subfolders that contain
+# their own package.json.
+#
+#   apps/*     -> deployable applications (api, web)
+#   packages/* -> shared libraries imported by the apps (shared types/schemas)
+#
+# A folder only becomes a workspace once it has a package.json; empty folders
+# are simply ignored until then.
+packages:
+  - 'apps/*'
+  - 'packages/*'

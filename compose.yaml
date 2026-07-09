@@ -17,7 +17,7 @@ services:
     ports:
       # HOST:CONTAINER port mapping. Bind to loopback (127.0.0.1) only so the DB
       # is reachable from this machine but not from other devices on the LAN.
-      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+      - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'
     volumes:
       # Named volume (declared at the bottom): Docker-managed storage for the
       # database files. Persists across `compose down`; removed by `compose down -v`.
@@ -30,7 +30,7 @@ services:
     healthcheck:
       # Lets Docker (and dependent services later) know when the DB is actually
       # ready to accept connections, not just "started".
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
       interval: 10s
       timeout: 5s
       retries: 5
