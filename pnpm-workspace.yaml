@@ -11,4 +11,7 @@ packages:
   - 'apps/*'
   - 'packages/*'
 allowBuilds:
+  # esbuild is drizzle-kit's bundler (loads drizzle.config.ts, runs migrations);
+  # trusted, so allow its postinstall to fetch the platform binary.
+  esbuild: true
   unrs-resolver: true
