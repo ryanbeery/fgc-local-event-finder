@@ -21,6 +21,16 @@ const envSchema = z.object({
 export type Env = z.infer<typeof envSchema>;
 
 /**
+ * Validator for @nestjs/config's `validate` hook. Runs the same schema against
+ * the process environment at app boot, so a bad environment fails loudly on
+ * startup rather than on the first query. Returns the parsed (coerced, defaulted)
+ * values.
+ */
+export function validateEnv(config: Record<string, unknown>): Env {
+  return envSchema.parse(config);
+}
+
+/**
  * Resolve the Postgres connection URL from the environment. Throws (via Zod) if
  * required parts are missing or malformed, so misconfiguration fails loudly.
  */
