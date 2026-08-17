@@ -13,7 +13,9 @@ export const venues = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     name: text('name').notNull(),
     address: text('address'),
-    location: geographyPoint('location').notNull(),
+    // Avoid enforcing `notNull()` since locations may have an address with
+    // pending coordinates
+    location: geographyPoint('location'),
     ...timestamps,
   },
   (table) => [
