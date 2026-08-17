@@ -2,7 +2,7 @@ import { Global, Inject, Module, OnModuleDestroy } from '@nestjs/common';
 import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres, { type Sql } from 'postgres';
 import { databaseUrl } from '../config/env';
-import * as schema from '../db/schema';
+import * as schema from './schema';
 
 /** DI token for the Drizzle instance. Inject with `@Inject(DATABASE)`. */
 export const DATABASE = Symbol('DATABASE');

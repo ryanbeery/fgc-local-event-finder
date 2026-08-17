@@ -17,7 +17,7 @@ export const timestamps = {
  * idempotent. Spread into any table that mirrors an external record.
  */
 export const sourceIdentity = {
-  sourceType: text('source_type').notNull().default('startgg'),
+  sourceType: text('source_type').notNull(),
   externalId: text('external_id').notNull(),
   sourceUrl: text('source_url'),
 };

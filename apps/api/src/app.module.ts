@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { validateEnv } from './config/env';
-import { DatabaseModule } from './database/database.module';
+import { DatabaseModule } from './db/database.module';
 import { TournamentsModule } from './tournaments/tournaments.module';
 
 @Module({

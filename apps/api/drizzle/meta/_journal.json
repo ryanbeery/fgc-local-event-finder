@@ -15,6 +15,13 @@
       "when": 1786974517338,
       "tag": "0001_adorable_siren",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786976512335,
+      "tag": "0002_lonely_veda",
+      "breakpoints": true
     }
   ]
 }
