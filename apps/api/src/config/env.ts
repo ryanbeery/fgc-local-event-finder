@@ -1,12 +1,9 @@
 import { z } from 'zod';
 
 /**
- * Single place that knows how the database connection string is built and
- * validated. Called from two entry points that can't share Nest's DI container:
- * Drizzle Kit's config (a CLI) and, later, the Nest ConfigModule at boot.
- *
- * Locally the POSTGRES_* parts are the source of truth and the URL is assembled
- * from them. In production a full DATABASE_URL is injected and takes precedence.
+ * Defines and validates, with zod, the app's environment variables. Called from
+ * two entry points that can't share Nest's DI container: Drizzle Kit's config
+ * (a CLI) and the Nest ConfigModule at boot.
  */
 const envSchema = z.object({
   POSTGRES_USER: z.string().min(1),
@@ -16,6 +13,8 @@ const envSchema = z.object({
   POSTGRES_PORT: z.coerce.number().int().positive().default(5432),
   // Optional override; when present it wins over the assembled parts.
   DATABASE_URL: z.string().url().optional(),
+  // Personal access token to ingest start.gg data
+  START_GG_PAT: z.string().min(1).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -33,6 +32,7 @@ export function validateEnv(config: Record<string, unknown>): Env {
 /**
  * Resolve the Postgres connection URL from the environment. Throws (via Zod) if
  * required parts are missing or malformed, so misconfiguration fails loudly.
+ * In production, a full DATABASE_URL is injected and takes precedence.
  */
 export function databaseUrl(source: NodeJS.ProcessEnv = process.env): string {
   const env = envSchema.parse(source);
